@@ -2,10 +2,14 @@
 // SETTINGS — CHANGE THESE
 // ============================================================
 
+
 // ---------- Barrel ----------
+
 const BARREL_OPEN_X = () => canvas.width / 2;
 const BARREL_CLOSED_X = 0;
-const BARREL_Y = () => canvas.height / 2;
+
+const BARREL_OPEN_Y = () => canvas.height / 2.2;
+const BARREL_SELECTED_Y = () => canvas.height / 2;
 
 const RADIUS = 200;
 const INSET = 1.3;
@@ -18,13 +22,21 @@ const BARREL_LINE_WIDTH = 15;
 const BARREL_MOVE_SPEED = 0.15;
 
 
+// ---------- Automatic Rotation ----------
+
+const AUTO_ROTATION_ENABLED = true;
+const AUTO_ROTATION_SPEED = 0.0015;
+
+
 // ---------- Images ----------
+
 const IMAGE_FOLDER = "mag_icons";
 const IMAGE_PREFIX = "icon";
 const IMAGE_EXTENSION = ".webp";
 
 
 // ---------- Labels ----------
+
 const LABELS = [
     "Gallery",
     "E-Shop",
@@ -35,38 +47,45 @@ const LABELS = [
 
 
 // ---------- Icons ----------
+
 const ICON_NORMAL_SIZE = 50;
 const ICON_HIGHLIGHT_SIZE = 70;
 const ICON_HOVER_RADIUS = 50;
 
 
 // ---------- Labels ----------
+
 const LABEL_FONT = "Mozilla Headline";
 const LABEL_NORMAL_SIZE = 16;
-const LABEL_HIGHLIGHT_SIZE = 32;
+const LABEL_HIGHLIGHT_SIZE = 30;
 const LABEL_HEIGHT = 40;
 const LABEL_DISTANCE = 80;
 
 
 // ---------- Highlight ----------
-const HIGHLIGHT_SPEED = 0.18;
+
+const HIGHLIGHT_SPEED = 0.12;
 
 
 // ---------- Drag ----------
+
 const DRAG_THRESHOLD = 0.001;
 
 
 // ---------- Momentum ----------
+
 const FRICTION = 0.96;
 const MIN_VELOCITY = 0.001;
 
 
 // ---------- Snap ----------
+
 const SNAP_SPEED = 0.15;
 const SNAP_THRESHOLD = 0.0001;
 
 
 // ---------- Wheel ----------
+
 const WHEEL_SPEED = 0.001;
 
 
@@ -88,6 +107,7 @@ function resizeCanvas() {
 
     canvas.height =
         window.innerHeight;
+
 }
 
 
@@ -97,8 +117,11 @@ resizeCanvas();
 window.addEventListener(
     "resize",
     () => {
+
         resizeCanvas();
+
         draw();
+
     }
 );
 
@@ -118,6 +141,30 @@ let barrelX =
 
 let barrelTargetX =
     BARREL_OPEN_X();
+
+let barrelCurrentY =
+    BARREL_OPEN_Y();
+
+let barrelTargetY =
+    BARREL_OPEN_Y();
+
+
+// ---------- Selected ----------
+
+let selected = false;
+
+let selectedIndex = -1;
+
+
+// ---------- Automatic rotation ----------
+
+let autoRotationActive =
+    AUTO_ROTATION_ENABLED;
+
+
+// ---------- Manual interaction ----------
+
+let manuallyControlled = false;
 
 
 // ---------- Drag ----------
@@ -151,30 +198,48 @@ const highlightSizes = [];
 // ============================================================
 
 function getBarrelX() {
+
     return barrelX;
+
 }
 
 
 function barrelY() {
-    return BARREL_Y();
+
+    return barrelCurrentY;
+
 }
 
 
 // ============================================================
-// OPEN / CLOSE BARREL
+// OPEN / CLOSE
 // ============================================================
 
 function openBarrel() {
 
+    selected = false;
+
+    selectedIndex = -1;
+
     barrelTargetX =
         BARREL_OPEN_X();
+
+    barrelTargetY =
+        BARREL_OPEN_Y();
+
 }
 
 
 function closeBarrel() {
 
+    selected = true;
+
     barrelTargetX =
         BARREL_CLOSED_X;
+
+    barrelTargetY =
+        BARREL_SELECTED_Y();
+
 }
 
 
@@ -191,6 +256,7 @@ function loadImages() {
     const image =
         new Image();
 
+
     image.src =
         `${IMAGE_FOLDER}/${IMAGE_PREFIX}${imageNumber}${IMAGE_EXTENSION}`;
 
@@ -202,6 +268,7 @@ function loadImages() {
         imageNumber++;
 
         loadImages();
+
     };
 
 
@@ -212,7 +279,9 @@ function loadImages() {
         );
 
         draw();
+
     };
+
 }
 
 
@@ -223,18 +292,15 @@ loadImages();
 // HELPERS
 // ============================================================
 
-// Get the angle of the mouse around the barrel
-
 function getMouseAngle(x, y) {
 
     return Math.atan2(
         y - barrelY(),
         x - getBarrelX()
     );
+
 }
 
-
-// Rotate a point around the barrel
 
 function rotatePoint(x, y) {
 
@@ -243,6 +309,7 @@ function rotatePoint(x, y) {
 
     const sin =
         Math.sin(rotation);
+
 
     return {
 
@@ -255,23 +322,30 @@ function rotatePoint(x, y) {
             barrelY() +
             x * sin +
             y * cos
+
     };
+
 }
 
 
-// Keep an angle difference between -PI and PI
-
 function normalizeAngle(angle) {
 
-    if (angle > Math.PI) {
+    while (angle > Math.PI) {
+
         angle -= Math.PI * 2;
+
     }
 
-    if (angle < -Math.PI) {
+
+    while (angle < -Math.PI) {
+
         angle += Math.PI * 2;
+
     }
+
 
     return angle;
+
 }
 
 
@@ -322,7 +396,9 @@ function getItem(index) {
 
         iconY:
             (y1 + y2) / 2
+
     };
+
 }
 
 
@@ -353,12 +429,14 @@ function getLabelPosition(
 
         Math.sin(angle) *
         distance
+
     );
+
 }
 
 
 // ============================================================
-// CLICK ITEM → CENTRE
+// ROTATE SELECTED ITEM TO RIGHT MIDDLE
 // ============================================================
 
 function rotateItemToCentre(index) {
@@ -373,14 +451,32 @@ function rotateItemToCentre(index) {
         step / 2;
 
 
+    const targetAngle = 0;
+
+
+    const requiredRotation =
+        targetAngle -
+        itemAngle;
+
+
+    const difference =
+        normalizeAngle(
+            requiredRotation -
+            rotation
+        );
+
+
     snapTarget =
-        -itemAngle;
+        rotation +
+        difference;
 
 
     snapping = true;
+
     clickedSnap = true;
 
     velocity = 0;
+
 }
 
 
@@ -391,7 +487,9 @@ function rotateItemToCentre(index) {
 function getHoveredItem() {
 
     if (!mouseInside) {
+
         return -1;
+
     }
 
 
@@ -405,16 +503,16 @@ function getHoveredItem() {
             getItem(i);
 
 
-        // -------------------------
-        // ICON
-        // -------------------------
-
         const icon =
             rotatePoint(
                 item.iconX,
                 item.iconY
             );
 
+
+        // -------------------------
+        // ICON
+        // -------------------------
 
         const iconDistance =
             Math.hypot(
@@ -427,7 +525,9 @@ function getHoveredItem() {
             iconDistance <=
             ICON_HOVER_RADIUS
         ) {
+
             return i;
+
         }
 
 
@@ -479,11 +579,14 @@ function getHoveredItem() {
         ) {
 
             return i;
+
         }
+
     }
 
 
     return -1;
+
 }
 
 
@@ -493,16 +596,12 @@ function getHoveredItem() {
 
 function drawBarrel() {
 
-    const y =
-        barrelY();
-
-
     ctx.save();
 
 
     ctx.translate(
         getBarrelX(),
-        y
+        barrelY()
     );
 
 
@@ -544,6 +643,7 @@ function drawBarrel() {
             0,
             -RADIUS
         );
+
     }
 
 
@@ -566,6 +666,7 @@ function drawBarrel() {
 
 
     ctx.restore();
+
 }
 
 
@@ -581,7 +682,9 @@ function drawIcon(
 ) {
 
     if (!image) {
+
         return;
+
     }
 
 
@@ -626,6 +729,7 @@ function drawIcon(
 
 
     ctx.restore();
+
 }
 
 
@@ -676,6 +780,7 @@ function drawLabel(
 
 
     ctx.restore();
+
 }
 
 
@@ -703,10 +808,6 @@ function drawItems() {
             getItem(i);
 
 
-        // -------------------------
-        // POSITION
-        // -------------------------
-
         const icon =
             rotatePoint(
                 item.iconX,
@@ -715,8 +816,13 @@ function drawItems() {
 
 
         // -------------------------
-        // HIGHLIGHT
+        // AUTOMATIC HIGHLIGHT
         // -------------------------
+
+        const rightSide =
+            icon.x >
+            getBarrelX();
+
 
         const atCentre =
             Math.abs(
@@ -726,12 +832,22 @@ function drawItems() {
             ICON_HOVER_RADIUS;
 
 
+        const centreHighlighted =
+            rightSide &&
+            atCentre;
+
+
+        // -------------------------
+        // HIGHLIGHT
+        // -------------------------
+
+        // The right-middle option is
+        // highlighted whether the barrel
+        // is open OR selected.
+
         const highlighted =
             i === hoveredIndex ||
-            (
-                hoveredIndex === -1 &&
-                atCentre
-            );
+            centreHighlighted;
 
 
         const targetSize =
@@ -747,15 +863,30 @@ function drawItems() {
 
             highlightSizes[i] =
                 ICON_NORMAL_SIZE;
+
         }
 
 
+        const difference =
+            targetSize -
+            highlightSizes[i];
+
+
         highlightSizes[i] +=
-            (
-                targetSize -
-                highlightSizes[i]
-            ) *
+            difference *
             HIGHLIGHT_SPEED;
+
+
+        if (
+            Math.abs(
+                difference
+            ) < 0.05
+        ) {
+
+            highlightSizes[i] =
+                targetSize;
+
+        }
 
 
         const iconSize =
@@ -763,7 +894,7 @@ function drawItems() {
 
 
         // -------------------------
-        // ICON
+        // IMAGE
         // -------------------------
 
         const image =
@@ -811,8 +942,6 @@ function drawItems() {
             );
 
 
-        // Smooth label size
-
         const labelSize =
             LABEL_NORMAL_SIZE +
 
@@ -840,6 +969,7 @@ function drawItems() {
             labelSize,
             highlighted
         );
+
     }
 
 
@@ -848,6 +978,7 @@ function drawItems() {
         0, 1,
         0, 0
     );
+
 }
 
 
@@ -865,8 +996,7 @@ function draw() {
 
 
     ctx.clearRect(
-        0,
-        0,
+        0, 0,
         canvas.width,
         canvas.height
     );
@@ -875,6 +1005,7 @@ function draw() {
     drawBarrel();
 
     drawItems();
+
 }
 
 
@@ -903,9 +1034,32 @@ canvas.addEventListener(
         mouseInside = true;
 
 
-        // Only allow rotation when
-        // the mouse is within the
-        // barrel's outer radius.
+        // ====================================================
+        // CLICKING AN OPTION WHILE SELECTED
+        // ====================================================
+
+        if (selected) {
+
+            const clickedIndex =
+                getHoveredItem();
+
+
+            if (clickedIndex !== -1) {
+
+                dragging = false;
+
+                dragMoved = false;
+
+                return;
+
+            }
+
+        }
+
+
+        // ====================================================
+        // NORMAL DRAG
+        // ====================================================
 
         const distance =
             Math.hypot(
@@ -921,8 +1075,15 @@ canvas.addEventListener(
             distance >
             RADIUS * INSET
         ) {
+
             return;
+
         }
+
+
+        manuallyControlled = true;
+
+        autoRotationActive = false;
 
 
         dragging = true;
@@ -942,6 +1103,7 @@ canvas.addEventListener(
                 mouseX,
                 mouseY
             );
+
     }
 );
 
@@ -972,7 +1134,9 @@ canvas.addEventListener(
 
 
         if (!dragging) {
+
             return;
+
         }
 
 
@@ -1010,7 +1174,9 @@ canvas.addEventListener(
         ) {
 
             dragMoved = true;
+
         }
+
     }
 );
 
@@ -1022,6 +1188,7 @@ canvas.addEventListener(
 function stopDragging() {
 
     dragging = false;
+
 }
 
 
@@ -1047,9 +1214,6 @@ canvas.addEventListener(
 
         mouseInside = false;
 
-        // Don't stop dragging here.
-        // The window-level mouseup
-        // handles it.
     }
 );
 
@@ -1062,14 +1226,12 @@ canvas.addEventListener(
     "click",
     e => {
 
-        // A drag should never
-        // count as a click.
-
         if (dragMoved) {
 
             dragMoved = false;
 
             return;
+
         }
 
 
@@ -1094,25 +1256,94 @@ canvas.addEventListener(
             getHoveredItem();
 
 
+        // ====================================================
+        // CLICKED ANY ICON / LABEL
+        // ====================================================
+
         if (index !== -1) {
 
-            // Move barrel to x = 0
-            closeBarrel();
+            selectedIndex =
+                index;
 
-            // Rotate clicked item
-            // to the centre.
+
+            selected = true;
+
+
+            barrelTargetX =
+                BARREL_CLOSED_X;
+
+
+            barrelTargetY =
+                BARREL_SELECTED_Y();
+
+
+            manuallyControlled = false;
+
+            autoRotationActive = false;
+
+
+            dragging = false;
+
+            snapping = false;
+
+            clickedSnap = false;
+
+            velocity = 0;
+
 
             rotateItemToCentre(
                 index
             );
 
-        } else {
 
-            // Clicking away from
-            // an item opens barrel.
+            return;
 
-            openBarrel();
         }
+
+
+        // ====================================================
+        // CLICKED OFF WHILE SELECTED
+        // ====================================================
+
+        if (selected) {
+
+            selected = false;
+
+            selectedIndex = -1;
+
+
+            barrelTargetX =
+                BARREL_OPEN_X();
+
+
+            barrelTargetY =
+                BARREL_OPEN_Y();
+
+
+            snapping = false;
+
+            clickedSnap = false;
+
+            velocity = 0;
+
+
+            manuallyControlled = false;
+
+            autoRotationActive =
+                AUTO_ROTATION_ENABLED;
+
+
+            return;
+
+        }
+
+
+        // ====================================================
+        // CLICKED OFF WHILE OPEN
+        // ====================================================
+
+        openBarrel();
+
     }
 );
 
@@ -1126,6 +1357,11 @@ canvas.addEventListener(
     e => {
 
         e.preventDefault();
+
+
+        manuallyControlled = true;
+
+        autoRotationActive = false;
 
 
         snapping = false;
@@ -1165,9 +1401,9 @@ function animate(time) {
         time;
 
 
-    // -------------------------
-    // BARREL MOVEMENT
-    // -------------------------
+    // ========================================================
+    // BARREL X MOVEMENT
+    // ========================================================
 
     const targetX =
         barrelTargetX ===
@@ -1186,11 +1422,43 @@ function animate(time) {
         BARREL_MOVE_SPEED;
 
 
-    // -------------------------
-    // MOMENTUM
-    // -------------------------
+    // ========================================================
+    // BARREL Y MOVEMENT
+    // ========================================================
+
+    barrelCurrentY +=
+        (
+            barrelTargetY -
+            barrelCurrentY
+        ) *
+        BARREL_MOVE_SPEED;
+
+
+    // ========================================================
+    // AUTOMATIC ROTATION
+    // ========================================================
 
     if (
+        !selected &&
+        !dragging &&
+        !snapping &&
+        autoRotationActive &&
+        AUTO_ROTATION_ENABLED
+    ) {
+
+        rotation +=
+            AUTO_ROTATION_SPEED *
+            deltaTime;
+
+    }
+
+
+    // ========================================================
+    // MOMENTUM
+    // ========================================================
+
+    if (
+        manuallyControlled &&
         !dragging &&
         !snapping
     ) {
@@ -1216,9 +1484,6 @@ function animate(time) {
 
             velocity = 0;
 
-
-            // Automatically snap
-            // to the nearest vertex.
 
             if (!clickedSnap) {
 
@@ -1248,14 +1513,17 @@ function animate(time) {
 
 
                 snapping = true;
+
             }
+
         }
+
     }
 
 
-    // -------------------------
+    // ========================================================
     // SNAP
-    // -------------------------
+    // ========================================================
 
     if (
         !dragging &&
@@ -1286,9 +1554,15 @@ function animate(time) {
 
 
             snapping = false;
+
         }
+
     }
 
+
+    // ========================================================
+    // DRAW
+    // ========================================================
 
     draw();
 
@@ -1296,6 +1570,7 @@ function animate(time) {
     requestAnimationFrame(
         animate
     );
+
 }
 
 
