@@ -2,10 +2,89 @@
 <html>
 <head>
     <title>108ight Magazine</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mozilla+Headline:wght@200..700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="styles/style.css">
+
+    <style>
+        body{
+            background-color: rgb(112, 112, 112);
+            font-family: Arial, Helvetica, sans-serif;
+            color: white;
+        }
+
+        .homepage-grid{
+            display: flex;
+            flex-direction: row;
+        }   
+
+        .homepage-card{
+            width: 150px;
+        }
+
+        .homepage-card-label{
+            display: flex;
+            justify-content: center;
+            color: white;
+            font-family: "Mozilla Headline",  sans-serif;
+            font-size: 13px;
+            padding: 0px;
+            margin: 0px;
+            font-weight: bold;
+        }
+
+        .homepage-card-icon{
+            width: 150px;
+            height: 150px;
+            border-radius: 75px;
+            display: flex;
+        }
+    </style>
+
 </head>
 
-<body>
-    <h1>108ight Magazine</h1>
-    <p>Why would you wanna wait!?</p>
+<body>  
+    <canvas id="canvas1"></canvas>
+        <div class="homepage-card">
+            <p class="homepage-card-label">Latest Magazine</p>
+        </div>
+
+        <div class="homepage-card">
+            <img class="homepage-card-icon" src="mag_icons/eshop_logo.webp">
+            <p class="homepage-card-label">Shop</p>
+        </div>
+
+        <div class="homepage-card">
+            <img class="homepage-card-icon" src="mag_icons/gallery_icon.webp">
+            <p class="homepage-card-label">Gallery</p>
+        </div>
+
+        <div class="homepage-card">
+            <p class="homepage-card-label">Interview Poll</p>
+        </div>
+
+        <div class="homepage-card">
+            <img class="homepage-card-icon" src="mag_icons/playlist_icon.webp">
+            <p class="homepage-card-label">Playlist</p>
+        </div>
+
+        <div class="homepage-card">
+            <img class="homepage-card-icon" src="mag_icons/settings_icon.webp">
+            <p class="homepage-card-label">Login</p>
+        </div>
+
+        <div class="homepage-card">
+            <p class="homepage-card-label">Zhero</p>
+        </div>
+
+        <div class="homepage-card">
+            <img class="homepage-card-icon" src="mag_icons/about_us_logo.webp">
+            <p class="homepage-card-label">About Us</p>
+        </div>
+    </div> -->
+
+    <script src="scripts/barrel.js"> </script>
 </body>
 </html>
