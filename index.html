@@ -6,6 +6,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Mozilla+Headline:wght@200..700&display=swap" rel="stylesheet">
 
+    
+
     <link rel="stylesheet" href="styles/style.css">
 
     <style>
@@ -14,11 +16,19 @@
             font-family: "Mozilla Headline", Arial, sans-serif;
             color: white;
         }
+        @font-face {
+            font-family: "MyFont";
+            src: url("fonts/AmericanCaptain-MdEY.otf") format("opentype");
+        }
+        .web-title{
+            font-family: "MyFont", Helvetica, sans-serif;
+            font-size: 64px;
+        }
     </style>
 
 </head>
 
-<body>  
+<body> 
     <canvas id="canvas1"></canvas>
     <script src="scripts/barrel.js"> </script>
     <script src="scripts/music_player.js"></script>
