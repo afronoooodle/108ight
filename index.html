@@ -1,11 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>108ight Magazine</title>
+    <title>108IGHT</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mozilla+Headline:wght@200..700&display=swap" rel="stylesheet">
+
+    
+
+    <link rel="stylesheet" href="styles/style.css">
+
+    <style>
+        body{
+            background-color: rgb(112, 112, 112);
+            font-family: "Mozilla Headline", Arial, sans-serif;
+            color: white;
+        }
+        @font-face {
+            font-family: "MyFont";
+            src: url("fonts/AmericanCaptain-MdEY.otf") format("opentype");
+        }
+        .web-title{
+            font-family: "MyFont", Helvetica, sans-serif;
+            font-size: 64px;
+        }
+    </style>
+
 </head>
 
-<body>
-    <h1>108ight Magazine</h1>
-    <p>Website coming soon...</p>
+<body> 
+    <canvas id="canvas1"></canvas>
+    <script src="scripts/barrel.js"> </script>
+    <script src="scripts/music_player.js"></script>
 </body>
 </html>
