@@ -26,7 +26,7 @@ const PLAYER_FONT = "Mozilla Headline";
 // Player size
 // --------------------
 
-const PLAYER_WIDTH = 420;
+const PLAYER_WIDTH = 500;
 const PLAYER_HEIGHT = 40;
 
 
@@ -34,7 +34,7 @@ const PLAYER_HEIGHT = 40;
 // Player position
 // --------------------
 
-const PLAYER_BOTTOM = "5%";
+const PLAYER_BOTTOM = "0%";
 
 
 // --------------------

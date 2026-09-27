@@ -3,90 +3,217 @@
 // ============================================================
 
 
-// ---------- Barrel ----------
+// ============================================================
+// BARREL
+// ============================================================
 
 const BARREL_OPEN_X = () => canvas.width / 2;
 const BARREL_CLOSED_X = 0;
 
-const BARREL_OPEN_Y = () => canvas.height / 2.2;
+const BARREL_OPEN_Y = () => canvas.height / 2;
 const BARREL_SELECTED_Y = () => canvas.height / 2;
 
-const RADIUS = 200;
+
+// ============================================================
+// MASTER BARREL SIZE
+// ============================================================
+//
+// 150 = original size
+// 300 = 2x larger
+// 75  = 0.5x smaller
+//
+// Icons, labels, distances, curves and interaction
+// areas scale automatically with this value.
+// ============================================================
+
+const RADIUS = 190;
+
 const INSET = 1.3;
+
 const POINTS = 9;
+
+
+// ============================================================
+// BARREL APPEARANCE
+// ============================================================
+
+const BARREL_OPACITY = 0.75;
 
 const BARREL_FILL = "#222222";
 const BARREL_STROKE = "#ffffff";
-const BARREL_LINE_WIDTH = 15;
+
+const BARREL_LINE_WIDTH = 3;
 
 const BARREL_MOVE_SPEED = 0.15;
 
 
-// ---------- Automatic Rotation ----------
+// ============================================================
+// CURVED SHAPE
+// ============================================================
+
+const EDGE_CURVE = 50;
+
+
+// ============================================================
+// AUTOMATIC ROTATION
+// ============================================================
 
 const AUTO_ROTATION_ENABLED = true;
+
 const AUTO_ROTATION_SPEED = 0.0015;
 
 
-// ---------- Images ----------
+// ============================================================
+// IMAGES
+// ============================================================
 
 const IMAGE_FOLDER = "mag_icons";
 const IMAGE_PREFIX = "icon";
 const IMAGE_EXTENSION = ".webp";
 
 
-// ---------- Labels ----------
+// ============================================================
+// LABELS
+// ============================================================
 
 const LABELS = [
-    "Gallery",
-    "E-Shop",
-    "Playlists",
-    "About Us",
-    "Settings"
+    "GALLERY",
+    "E-SHOP",
+    "PLAYLISTS",
+    "ABOUT US",
+    "SETTINGS",
+    "INTERVIEW POLL",
+    "LOGIN",
+    "ZHERO",
+    "LATEST MAGAZINE"
 ];
 
 
-// ---------- Icons ----------
+// ============================================================
+// ICONS
+// ============================================================
 
-const ICON_NORMAL_SIZE = 50;
-const ICON_HIGHLIGHT_SIZE = 70;
-const ICON_HOVER_RADIUS = 50;
+const ICON_NORMAL_SIZE = 40;
+const ICON_HIGHLIGHT_SIZE = 50;
+
+const ICON_HOVER_RADIUS = 30;
+
+// Distance from barrel point to icon.
+const ICON_POINT_DISTANCE = 70;
 
 
-// ---------- Labels ----------
+// ============================================================
+// LABELS
+// ============================================================
 
-const LABEL_FONT = "Mozilla Headline";
-const LABEL_NORMAL_SIZE = 16;
-const LABEL_HIGHLIGHT_SIZE = 30;
+const LABEL_FONT = "Archivo Black";
+
+const LABEL_NORMAL_SIZE = 12;
+const LABEL_HIGHLIGHT_SIZE = 16;
+
 const LABEL_HEIGHT = 40;
+
+// Distance between icon and label.
 const LABEL_DISTANCE = 80;
 
 
-// ---------- Highlight ----------
+// ============================================================
+// HIGHLIGHT
+// ============================================================
 
 const HIGHLIGHT_SPEED = 0.12;
 
 
-// ---------- Drag ----------
+// ============================================================
+// DRAG
+// ============================================================
 
 const DRAG_THRESHOLD = 0.001;
 
 
-// ---------- Momentum ----------
+// ============================================================
+// MOMENTUM
+// ============================================================
 
 const FRICTION = 0.96;
 const MIN_VELOCITY = 0.001;
 
 
-// ---------- Snap ----------
+// ============================================================
+// SNAP
+// ============================================================
 
 const SNAP_SPEED = 0.15;
 const SNAP_THRESHOLD = 0.0001;
 
 
-// ---------- Wheel ----------
+// ============================================================
+// WHEEL
+// ============================================================
 
 const WHEEL_SPEED = 0.001;
+
+
+// ============================================================
+// ============================================================
+// CENTRE MESSAGE SETTINGS
+// ============================================================
+// ============================================================
+
+const CENTRE_MESSAGE = "MAGAZINES\n IN STOCK";
+const CENTRE_MESSAGE_X = 0;
+const CENTRE_MESSAGE_Y = 0;
+const CENTRE_MESSAGE_FONT = "Archivo Black";
+const CENTRE_MESSAGE_SIZE = 20;
+const CENTRE_MESSAGE_WEIGHT = "normal";
+const CENTRE_MESSAGE_LETTER_SPACING = 0;
+const CENTRE_MESSAGE_COLOR = "#ffffff";
+const CENTRE_MESSAGE_PULSE_ENABLED = true;
+const CENTRE_MESSAGE_PULSE_COLOR = "#ff0000";
+const CENTRE_MESSAGE_COLOR_PULSE_ENABLED = true;
+const CENTRE_MESSAGE_PULSE_SPEED = 0.004;
+const CENTRE_MESSAGE_MIN_SCALE = 0.85;
+const CENTRE_MESSAGE_MAX_SCALE = 1.15;
+const CENTRE_MESSAGE_OPACITY = 1;
+const CENTRE_MESSAGE_ALIGN = "center";
+const CENTRE_MESSAGE_BASELINE = "middle";
+
+
+// ============================================================
+// ORIGINAL DESIGN SIZE
+// ============================================================
+//
+// All original measurements were designed around:
+//
+// RADIUS = 150
+//
+// We use this as the reference so changing RADIUS
+// scales everything proportionally.
+// ============================================================
+
+const BASE_RADIUS = 150;
+
+
+// ============================================================
+// MASTER SCALE
+// ============================================================
+
+function getBarrelScale() {
+
+    return RADIUS / BASE_RADIUS;
+
+}
+
+
+// ============================================================
+// SCALE VALUE
+// ============================================================
+
+function scale(value) {
+
+    return value * getBarrelScale();
+
+}
 
 
 // ============================================================
@@ -134,7 +261,9 @@ let rotation = 0;
 let velocity = 0;
 
 
-// ---------- Barrel position ----------
+// ============================================================
+// BARREL POSITION
+// ============================================================
 
 let barrelX =
     BARREL_OPEN_X();
@@ -149,48 +278,69 @@ let barrelTargetY =
     BARREL_OPEN_Y();
 
 
-// ---------- Selected ----------
+// ============================================================
+// SELECTED
+// ============================================================
 
 let selected = false;
 
 let selectedIndex = -1;
 
 
-// ---------- Automatic rotation ----------
+// ============================================================
+// AUTOMATIC ROTATION
+// ============================================================
 
 let autoRotationActive =
     AUTO_ROTATION_ENABLED;
 
 
-// ---------- Manual interaction ----------
+// ============================================================
+// MANUAL INTERACTION
+// ============================================================
 
 let manuallyControlled = false;
 
 
-// ---------- Drag ----------
+// ============================================================
+// DRAG
+// ============================================================
 
 let dragging = false;
 let dragMoved = false;
 let lastMouseAngle = 0;
 
 
-// ---------- Snap ----------
+// ============================================================
+// SNAP
+// ============================================================
 
 let snapping = false;
 let snapTarget = 0;
 let clickedSnap = false;
 
 
-// ---------- Mouse ----------
+// ============================================================
+// MOUSE
+// ============================================================
 
 let mouseX = 0;
 let mouseY = 0;
 let mouseInside = false;
 
 
-// ---------- Highlight ----------
+// ============================================================
+// HIGHLIGHT
+// ============================================================
 
 const highlightSizes = [];
+
+
+// ============================================================
+// CENTRE MESSAGE PULSE STATE
+// ============================================================
+
+let centrePulseTime = 0;
 
 
 // ============================================================
@@ -248,6 +398,7 @@ function closeBarrel() {
 // ============================================================
 
 const images = [];
+
 let imageNumber = 1;
 
 
@@ -356,46 +507,36 @@ function normalizeAngle(angle) {
 function getItem(index) {
 
     const step =
-        Math.PI * 2 / POINTS;
+        Math.PI * 2 /
+        POINTS;
 
 
-    const angle1 =
+    const angle =
         -Math.PI / 2 +
         index * step;
 
 
-    const angle2 =
-        angle1 + step;
-
-
-    const x1 =
-        Math.cos(angle1) *
-        RADIUS;
-
-    const y1 =
-        Math.sin(angle1) *
-        RADIUS;
-
-
-    const x2 =
-        Math.cos(angle2) *
-        RADIUS;
-
-    const y2 =
-        Math.sin(angle2) *
-        RADIUS;
+    const iconRadius =
+        (
+            BASE_RADIUS * INSET -
+            ICON_POINT_DISTANCE
+        ) *
+        getBarrelScale();
 
 
     return {
 
-        angle1,
-        angle2,
+        angle,
 
         iconX:
-            (x1 + x2) / 2,
+            Math.cos(angle) *
+            iconRadius,
 
         iconY:
-            (y1 + y2) / 2
+            Math.sin(angle) *
+            iconRadius,
+
+        iconRadius
 
     };
 
@@ -412,23 +553,22 @@ function getLabelPosition(
 ) {
 
     const angle =
-        (item.angle1 +
-         item.angle2) / 2;
+        item.angle;
 
 
     const distance =
-        RADIUS +
-        LABEL_DISTANCE +
+        item.iconRadius +
+        scale(LABEL_DISTANCE) +
         width / 2;
 
 
     return rotatePoint(
 
         Math.cos(angle) *
-        distance,
+            distance,
 
         Math.sin(angle) *
-        distance
+            distance
 
     );
 
@@ -442,13 +582,13 @@ function getLabelPosition(
 function rotateItemToCentre(index) {
 
     const step =
-        Math.PI * 2 / POINTS;
+        Math.PI * 2 /
+        POINTS;
 
 
     const itemAngle =
         -Math.PI / 2 +
-        index * step +
-        step / 2;
+        index * step;
 
 
     const targetAngle = 0;
@@ -510,9 +650,9 @@ function getHoveredItem() {
             );
 
 
-        // -------------------------
+        // ----------------------------------------------------
         // ICON
-        // -------------------------
+        // ----------------------------------------------------
 
         const iconDistance =
             Math.hypot(
@@ -523,7 +663,7 @@ function getHoveredItem() {
 
         if (
             iconDistance <=
-            ICON_HOVER_RADIUS
+            scale(ICON_HOVER_RADIUS)
         ) {
 
             return i;
@@ -531,9 +671,9 @@ function getHoveredItem() {
         }
 
 
-        // -------------------------
+        // ----------------------------------------------------
         // LABEL
-        // -------------------------
+        // ----------------------------------------------------
 
         const label =
             LABELS[
@@ -542,7 +682,7 @@ function getHoveredItem() {
 
 
         ctx.font =
-            `${LABEL_NORMAL_SIZE}px "${LABEL_FONT}"`;
+            `${scale(LABEL_NORMAL_SIZE)}px "${LABEL_FONT}"`;
 
 
         const labelWidth =
@@ -561,20 +701,20 @@ function getHoveredItem() {
         if (
 
             mouseX >=
-                labelPosition.x -
-                labelWidth / 2 &&
+            labelPosition.x -
+            labelWidth / 2 &&
 
             mouseX <=
-                labelPosition.x +
-                labelWidth / 2 &&
+            labelPosition.x +
+            labelWidth / 2 &&
 
             mouseY >=
-                labelPosition.y -
-                LABEL_HEIGHT / 2 &&
+            labelPosition.y -
+            scale(LABEL_HEIGHT) / 2 &&
 
             mouseY <=
-                labelPosition.y +
-                LABEL_HEIGHT / 2
+            labelPosition.y +
+            scale(LABEL_HEIGHT) / 2
 
         ) {
 
@@ -591,10 +731,63 @@ function getHoveredItem() {
 
 
 // ============================================================
+// GET BARREL SPIKES
+// ============================================================
+
+function getBarrelPoints() {
+
+    const points = [];
+
+
+    const spikeRadius =
+        RADIUS * INSET;
+
+
+    for (
+        let i = 0;
+        i < POINTS;
+        i++
+    ) {
+
+        const angle =
+            -Math.PI / 2 +
+            rotation +
+            i *
+            (
+                Math.PI * 2 /
+                POINTS
+            );
+
+
+        points.push({
+
+            x:
+                Math.cos(angle) *
+                spikeRadius,
+
+            y:
+                Math.sin(angle) *
+                spikeRadius
+
+        });
+
+    }
+
+
+    return points;
+
+}
+
+
+// ============================================================
 // DRAW BARREL
 // ============================================================
 
 function drawBarrel() {
+
+    const points =
+        getBarrelPoints();
+
 
     ctx.save();
 
@@ -605,16 +798,7 @@ function drawBarrel() {
     );
 
 
-    ctx.rotate(rotation);
-
-
     ctx.beginPath();
-
-
-    ctx.moveTo(
-        0,
-        -RADIUS
-    );
 
 
     for (
@@ -623,25 +807,117 @@ function drawBarrel() {
         i++
     ) {
 
-        ctx.rotate(
-            Math.PI / POINTS
-        );
+        const current =
+            points[i];
+
+        const next =
+            points[
+                (i + 1) % POINTS
+            ];
 
 
-        ctx.lineTo(
-            0,
-            -(RADIUS * INSET)
-        );
+        const dx =
+            next.x -
+            current.x;
+
+        const dy =
+            next.y -
+            current.y;
 
 
-        ctx.rotate(
-            Math.PI / POINTS
-        );
+        const length =
+            Math.sqrt(
+                dx * dx +
+                dy * dy
+            );
 
 
-        ctx.lineTo(
-            0,
-            -RADIUS
+        const dirX =
+            dx / length;
+
+        const dirY =
+            dy / length;
+
+
+        const normalX =
+            -dirY;
+
+        const normalY =
+            dirX;
+
+
+        const controlDistance =
+            length * 0.30;
+
+
+        const control1 = {
+
+            x:
+                current.x +
+                dirX *
+                controlDistance,
+
+            y:
+                current.y +
+                dirY *
+                controlDistance
+
+        };
+
+
+        const control2 = {
+
+            x:
+                next.x -
+                dirX *
+                controlDistance,
+
+            y:
+                next.y -
+                dirY *
+                controlDistance
+
+        };
+
+
+        control1.x +=
+            normalX *
+            scale(EDGE_CURVE);
+
+        control1.y +=
+            normalY *
+            scale(EDGE_CURVE);
+
+        control2.x +=
+            normalX *
+            scale(EDGE_CURVE);
+
+        control2.y +=
+            normalY *
+            scale(EDGE_CURVE);
+
+
+        if (i === 0) {
+
+            ctx.moveTo(
+                current.x,
+                current.y
+            );
+
+        }
+
+
+        ctx.bezierCurveTo(
+
+            control1.x,
+            control1.y,
+
+            control2.x,
+            control2.y,
+
+            next.x,
+            next.y
+
         );
 
     }
@@ -650,14 +926,20 @@ function drawBarrel() {
     ctx.closePath();
 
 
+    ctx.globalAlpha =
+        BARREL_OPACITY;
+
+
     ctx.fillStyle =
         BARREL_FILL;
+
 
     ctx.strokeStyle =
         BARREL_STROKE;
 
+
     ctx.lineWidth =
-        BARREL_LINE_WIDTH;
+        scale(BARREL_LINE_WIDTH);
 
 
     ctx.fill();
@@ -768,6 +1050,7 @@ function drawLabel(
     ctx.textAlign =
         "center";
 
+
     ctx.textBaseline =
         "middle";
 
@@ -780,6 +1063,360 @@ function drawLabel(
 
 
     ctx.restore();
+
+}
+
+
+// ============================================================
+// COLOUR INTERPOLATION
+// ============================================================
+//
+// Converts colours such as:
+//
+// #ffffff
+// #ff0000
+//
+// into a smooth colour transition.
+//
+
+function interpolateColour(
+    colour1,
+    colour2,
+    amount
+) {
+
+    const c1 =
+        colour1.replace("#", "");
+
+    const c2 =
+        colour2.replace("#", "");
+
+
+    const r1 =
+        parseInt(
+            c1.substring(0, 2),
+            16
+        );
+
+    const g1 =
+        parseInt(
+            c1.substring(2, 4),
+            16
+        );
+
+    const b1 =
+        parseInt(
+            c1.substring(4, 6),
+            16
+        );
+
+
+    const r2 =
+        parseInt(
+            c2.substring(0, 2),
+            16
+        );
+
+    const g2 =
+        parseInt(
+            c2.substring(2, 4),
+            16
+        );
+
+    const b2 =
+        parseInt(
+            c2.substring(4, 6),
+            16
+        );
+
+
+    const r =
+        Math.round(
+            r1 +
+            (r2 - r1) *
+            amount
+        );
+
+    const g =
+        Math.round(
+            g1 +
+            (g2 - g1) *
+            amount
+        );
+
+    const b =
+        Math.round(
+            b1 +
+            (b2 - b1) *
+            amount
+        );
+
+
+    return `rgb(${r}, ${g}, ${b})`;
+
+}
+
+
+// ============================================================
+// DRAW CENTRE MESSAGE
+// ============================================================
+//
+// IMPORTANT:
+//
+// This text is NOT rotated with the barrel.
+//
+// The barrel rotates underneath it,
+// but the text itself always remains upright.
+//
+
+function drawCentreMessage() {
+
+    if (
+        !CENTRE_MESSAGE ||
+        CENTRE_MESSAGE.length === 0
+    ) {
+
+        return;
+
+    }
+
+
+    // --------------------------------------------------------
+    // PULSE CALCULATION
+    // --------------------------------------------------------
+
+    let pulseScale = 1;
+
+    let colour =
+        CENTRE_MESSAGE_COLOR;
+
+
+    if (
+        CENTRE_MESSAGE_PULSE_ENABLED
+    ) {
+
+        // Creates a smooth 0 → 1 → 0 wave.
+
+        const wave =
+            (
+                Math.sin(
+                    centrePulseTime *
+                    CENTRE_MESSAGE_PULSE_SPEED
+                ) + 1
+            ) / 2;
+
+
+        // Grow and shrink.
+
+        pulseScale =
+            CENTRE_MESSAGE_MIN_SCALE +
+            (
+                CENTRE_MESSAGE_MAX_SCALE -
+                CENTRE_MESSAGE_MIN_SCALE
+            ) *
+            wave;
+
+
+        // Change colour.
+
+        if (
+            CENTRE_MESSAGE_COLOR_PULSE_ENABLED
+        ) {
+
+            colour =
+                interpolateColour(
+                    CENTRE_MESSAGE_COLOR,
+                    CENTRE_MESSAGE_PULSE_COLOR,
+                    wave
+                );
+
+        }
+
+    }
+
+
+    // --------------------------------------------------------
+    // FINAL SIZE
+    // --------------------------------------------------------
+
+    const finalSize =
+        scale(
+            CENTRE_MESSAGE_SIZE
+        ) *
+        pulseScale;
+
+
+    // --------------------------------------------------------
+    // FINAL POSITION
+    // --------------------------------------------------------
+
+    const x =
+        getBarrelX() +
+        scale(
+            CENTRE_MESSAGE_X
+        );
+
+
+    const y =
+        barrelY() +
+        scale(
+            CENTRE_MESSAGE_Y
+        );
+
+
+    // --------------------------------------------------------
+    // DRAW
+    // --------------------------------------------------------
+
+    ctx.setTransform(
+        1, 0,
+        0, 1,
+        0, 0
+    );
+
+
+    ctx.save();
+
+
+    ctx.globalAlpha =
+        CENTRE_MESSAGE_OPACITY;
+
+
+    ctx.fillStyle =
+        colour;
+
+
+    ctx.font =
+        `${CENTRE_MESSAGE_WEIGHT} ${finalSize}px "${CENTRE_MESSAGE_FONT}"`;
+
+
+    ctx.textAlign =
+        CENTRE_MESSAGE_ALIGN;
+
+
+    ctx.textBaseline =
+        CENTRE_MESSAGE_BASELINE;
+
+
+    // --------------------------------------------------------
+    // LETTER SPACING
+    // --------------------------------------------------------
+    //
+    // Canvas does not have universal letter-spacing
+    // support, so draw the characters individually
+    // when a value is supplied.
+    //
+
+    if (
+        CENTRE_MESSAGE_LETTER_SPACING === 0
+    ) {
+
+        const lines = CENTRE_MESSAGE.split("\n");
+
+        const lineHeight = finalSize * 1.2;
+
+        lines.forEach((line, index) => {
+
+            ctx.fillText(
+                line,
+                x,
+                y +
+                (
+                    index -
+                    (lines.length - 1) / 2
+                ) *
+                lineHeight
+            );
+
+        });
+
+    }
+
+    else {
+
+        drawSpacedText(
+            CENTRE_MESSAGE,
+            x,
+            y,
+            CENTRE_MESSAGE_LETTER_SPACING *
+            getBarrelScale()
+        );
+
+    }
+
+
+    ctx.restore();
+
+}
+
+
+// ============================================================
+// DRAW SPACED TEXT
+// ============================================================
+
+function drawSpacedText(
+    text,
+    x,
+    y,
+    spacing
+) {
+
+    let totalWidth = 0;
+
+    const widths = [];
+
+
+    for (
+        let i = 0;
+        i < text.length;
+        i++
+    ) {
+
+        const width =
+            ctx.measureText(
+                text[i]
+            ).width;
+
+
+        widths.push(width);
+
+        totalWidth += width;
+
+    }
+
+
+    totalWidth +=
+        spacing *
+        (text.length - 1);
+
+
+    let currentX =
+        x -
+        totalWidth / 2;
+
+
+    for (
+        let i = 0;
+        i < text.length;
+        i++
+    ) {
+
+        ctx.textAlign =
+            "left";
+
+
+        ctx.fillText(
+            text[i],
+            currentX,
+            y
+        );
+
+
+        currentX +=
+            widths[i] +
+            spacing;
+
+    }
 
 }
 
@@ -815,9 +1452,9 @@ function drawItems() {
             );
 
 
-        // -------------------------
+        // ----------------------------------------------------
         // AUTOMATIC HIGHLIGHT
-        // -------------------------
+        // ----------------------------------------------------
 
         const rightSide =
             icon.x >
@@ -829,7 +1466,7 @@ function drawItems() {
                 icon.y -
                 centreY
             ) <=
-            ICON_HOVER_RADIUS;
+            scale(ICON_HOVER_RADIUS);
 
 
         const centreHighlighted =
@@ -837,23 +1474,29 @@ function drawItems() {
             atCentre;
 
 
-        // -------------------------
+        // ----------------------------------------------------
         // HIGHLIGHT
-        // -------------------------
-
-        // The right-middle option is
-        // highlighted whether the barrel
-        // is open OR selected.
+        // ----------------------------------------------------
 
         const highlighted =
             i === hoveredIndex ||
             centreHighlighted;
 
 
+        // ----------------------------------------------------
+        // ICON SIZE
+        // ----------------------------------------------------
+
         const targetSize =
             highlighted
-                ? ICON_HIGHLIGHT_SIZE
-                : ICON_NORMAL_SIZE;
+
+                ? scale(
+                    ICON_HIGHLIGHT_SIZE
+                )
+
+                : scale(
+                    ICON_NORMAL_SIZE
+                );
 
 
         if (
@@ -862,7 +1505,9 @@ function drawItems() {
         ) {
 
             highlightSizes[i] =
-                ICON_NORMAL_SIZE;
+                scale(
+                    ICON_NORMAL_SIZE
+                );
 
         }
 
@@ -893,9 +1538,9 @@ function drawItems() {
             highlightSizes[i];
 
 
-        // -------------------------
+        // ----------------------------------------------------
         // IMAGE
-        // -------------------------
+        // ----------------------------------------------------
 
         const image =
             images.length
@@ -913,9 +1558,9 @@ function drawItems() {
         );
 
 
-        // -------------------------
+        // ----------------------------------------------------
         // LABEL
-        // -------------------------
+        // ----------------------------------------------------
 
         const label =
             LABELS[
@@ -925,8 +1570,10 @@ function drawItems() {
 
         ctx.font =
             highlighted
-                ? `bold ${LABEL_HIGHLIGHT_SIZE}px "${LABEL_FONT}"`
-                : `${LABEL_NORMAL_SIZE}px "${LABEL_FONT}"`;
+
+                ? `bold ${scale(LABEL_HIGHLIGHT_SIZE)}px "${LABEL_FONT}"`
+
+                : `${scale(LABEL_NORMAL_SIZE)}px "${LABEL_FONT}"`;
 
 
         const labelWidth =
@@ -942,23 +1589,55 @@ function drawItems() {
             );
 
 
+        // ----------------------------------------------------
+        // LABEL SIZE
+        // ----------------------------------------------------
+
+        const normalIconSize =
+            scale(
+                ICON_NORMAL_SIZE
+            );
+
+
+        const highlightIconSize =
+            scale(
+                ICON_HIGHLIGHT_SIZE
+            );
+
+
         const labelSize =
-            LABEL_NORMAL_SIZE +
+            scale(
+                LABEL_NORMAL_SIZE
+            )
+
+            +
 
             (
                 (
                     iconSize -
-                    ICON_NORMAL_SIZE
-                ) /
-                (
-                    ICON_HIGHLIGHT_SIZE -
-                    ICON_NORMAL_SIZE
+                    normalIconSize
                 )
-            ) *
+
+                /
+
+                (
+                    highlightIconSize -
+                    normalIconSize
+                )
+            )
+
+            *
 
             (
-                LABEL_HIGHLIGHT_SIZE -
-                LABEL_NORMAL_SIZE
+                scale(
+                    LABEL_HIGHLIGHT_SIZE
+                )
+
+                -
+
+                scale(
+                    LABEL_NORMAL_SIZE
+                )
             );
 
 
@@ -996,15 +1675,36 @@ function draw() {
 
 
     ctx.clearRect(
-        0, 0,
+        0,
+        0,
         canvas.width,
         canvas.height
     );
 
 
+    // --------------------------------------------------------
+    // BARREL
+    // --------------------------------------------------------
+
     drawBarrel();
 
+
+    // --------------------------------------------------------
+    // ICONS + LABELS
+    // --------------------------------------------------------
+
     drawItems();
+
+
+    // --------------------------------------------------------
+    // CENTRE MESSAGE
+    // --------------------------------------------------------
+    //
+    // Drawn last so it remains clearly visible
+    // above the barrel and its contents.
+    //
+
+    drawCentreMessage();
 
 }
 
@@ -1063,11 +1763,13 @@ canvas.addEventListener(
 
         const distance =
             Math.hypot(
+
                 mouseX -
                 getBarrelX(),
 
                 mouseY -
                 barrelY()
+
             );
 
 
@@ -1402,6 +2104,27 @@ function animate(time) {
 
 
     // ========================================================
+    // CENTRE MESSAGE PULSE
+    // ========================================================
+
+    if (
+        CENTRE_MESSAGE_PULSE_ENABLED
+    ) {
+
+        centrePulseTime +=
+            time -
+            (
+                time -
+                (
+                    deltaTime *
+                    16.6667
+                )
+            );
+
+    }
+
+
+    // ========================================================
     // BARREL X MOVEMENT
     // ========================================================
 
@@ -1498,11 +2221,13 @@ function animate(time) {
 
                 const nearest =
                     Math.round(
+
                         (
                             rotation -
                             vertexStart
                         ) /
                         step
+
                     );
 
 
