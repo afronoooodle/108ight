@@ -11,15 +11,15 @@
 // Music
 // --------------------
 
-const MUSIC_FILE = "music/SUPXR-WHATS_UP!.mp3";
-const MUSIC_NAME = "SUPXR-WHATS_UP!.mp3";
+const MUSIC_FILE = "music/ANTBOOGER - DELIVERY GUY (PROD.glinkli).mp3";
+const MUSIC_NAME = "ANTBOOGER - DELIVERY GUY (PROD.glinkli).mp3";
 
 
 // --------------------
 // Font
 // --------------------
 
-const PLAYER_FONT = "Mozilla Headline";
+const PLAYER_FONT = "Mozilla Headline"; // Archivo Black
 
 
 // --------------------

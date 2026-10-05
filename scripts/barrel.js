@@ -160,7 +160,7 @@ const WHEEL_SPEED = 0.001;
 // ============================================================
 // ============================================================
 
-const CENTRE_MESSAGE = "MAGAZINES\n IN STOCK";
+const CENTRE_MESSAGE = ""; // "MAGAZINES\n IN STOCK"
 const CENTRE_MESSAGE_X = 0;
 const CENTRE_MESSAGE_Y = 0;
 const CENTRE_MESSAGE_FONT = "Archivo Black";
@@ -168,9 +168,9 @@ const CENTRE_MESSAGE_SIZE = 20;
 const CENTRE_MESSAGE_WEIGHT = "normal";
 const CENTRE_MESSAGE_LETTER_SPACING = 0;
 const CENTRE_MESSAGE_COLOR = "#ffffff";
-const CENTRE_MESSAGE_PULSE_ENABLED = true;
+const CENTRE_MESSAGE_PULSE_ENABLED = true; //true
 const CENTRE_MESSAGE_PULSE_COLOR = "#ff0000";
-const CENTRE_MESSAGE_COLOR_PULSE_ENABLED = true;
+const CENTRE_MESSAGE_COLOR_PULSE_ENABLED = true; //true
 const CENTRE_MESSAGE_PULSE_SPEED = 0.004;
 const CENTRE_MESSAGE_MIN_SCALE = 0.85;
 const CENTRE_MESSAGE_MAX_SCALE = 1.15;
@@ -2210,36 +2210,76 @@ function animate(time) {
 
             if (!clickedSnap) {
 
-                const step =
-                    Math.PI * 2 /
-                    POINTS;
+    const step =
+        Math.PI * 2 /
+        POINTS;
 
 
-                const vertexStart =
-                    -Math.PI / 2;
+    // Find the option whose current position is
+    // closest to the right-middle selection position.
+
+    let nearestIndex = 0;
+    let smallestDifference = Infinity;
 
 
-                const nearest =
-                    Math.round(
+    for (
+        let i = 0;
+        i < POINTS;
+        i++
+    ) {
 
-                        (
-                            rotation -
-                            vertexStart
-                        ) /
-                        step
-
-                    );
-
-
-                snapTarget =
-                    vertexStart +
-                    nearest *
-                    step;
+        const itemAngle =
+            -Math.PI / 2 +
+            i * step;
 
 
-                snapping = true;
+        // Rotation needed to put this option
+        // at the right-middle position.
 
-            }
+        const requiredRotation =
+            -itemAngle;
+
+
+        const difference =
+            Math.abs(
+                normalizeAngle(
+                    requiredRotation -
+                    rotation
+                )
+            );
+
+
+        if (
+            difference <
+            smallestDifference
+        ) {
+
+            smallestDifference =
+                difference;
+
+            nearestIndex =
+                i;
+
+        }
+
+    }
+
+
+    const nearestItemAngle =
+        -Math.PI / 2 +
+        nearestIndex * step;
+
+
+    // Lock the nearest option to the
+    // right-middle position.
+
+    snapTarget =
+        -nearestItemAngle;
+
+
+    snapping = true;
+
+}
 
         }
 
