@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>108ight — Account</title>
+
+    <link
+        rel="stylesheet"
+        href="auth.css"
+    >
+
+</head>
+
+
+<body>
+
+
+    <main class="auth-page">
+
+        <section class="auth-box">
+
+            <h1 class="auth-title">
+                My Account
+            </h1>
+
+
+            <p class="account-email">
+                <strong>Email:</strong>
+                <span id="account-email">
+                    Loading...
+                </span>
+            </p>
+
+
+            <button
+                id="logout-button"
+                class="logout-button"
+                type="button"
+            >
+                Log Out
+            </button>
+
+
+            <div
+                id="auth-message"
+                class="auth-message"
+            ></div>
+
+
+            <div class="auth-links">
+
+                <a href="index.html">
+                    Back to 108ight
+                </a>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- Supabase library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Our authentication code -->
+    <script src="scripts/auth.js"></script>
+
+
+</body>
+
+</html>

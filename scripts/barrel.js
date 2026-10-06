@@ -168,9 +168,9 @@ const CENTRE_MESSAGE_SIZE = 20;
 const CENTRE_MESSAGE_WEIGHT = "normal";
 const CENTRE_MESSAGE_LETTER_SPACING = 0;
 const CENTRE_MESSAGE_COLOR = "#ffffff";
-const CENTRE_MESSAGE_PULSE_ENABLED = true; //true
+const CENTRE_MESSAGE_PULSE_ENABLED = true;
 const CENTRE_MESSAGE_PULSE_COLOR = "#ff0000";
-const CENTRE_MESSAGE_COLOR_PULSE_ENABLED = true; //true
+const CENTRE_MESSAGE_COLOR_PULSE_ENABLED = true;
 const CENTRE_MESSAGE_PULSE_SPEED = 0.004;
 const CENTRE_MESSAGE_MIN_SCALE = 0.85;
 const CENTRE_MESSAGE_MAX_SCALE = 1.15;
@@ -1311,9 +1311,12 @@ function drawCentreMessage() {
         CENTRE_MESSAGE_LETTER_SPACING === 0
     ) {
 
-        const lines = CENTRE_MESSAGE.split("\n");
+        const lines =
+            CENTRE_MESSAGE.split("\n");
 
-        const lineHeight = finalSize * 1.2;
+        const lineHeight =
+            finalSize * 1.2;
+
 
         lines.forEach((line, index) => {
 
@@ -1998,6 +2001,19 @@ canvas.addEventListener(
             );
 
 
+            // ====================================================
+            // LOGIN
+            // ====================================================
+
+            if (LABELS[index] === "LOGIN") {
+
+                window.location.href = "login.html";
+
+                return;
+
+            }
+
+
             return;
 
         }
@@ -2210,76 +2226,76 @@ function animate(time) {
 
             if (!clickedSnap) {
 
-    const step =
-        Math.PI * 2 /
-        POINTS;
+                const step =
+                    Math.PI * 2 /
+                    POINTS;
 
 
-    // Find the option whose current position is
-    // closest to the right-middle selection position.
+                // Find the option whose current position is
+                // closest to the right-middle selection position.
 
-    let nearestIndex = 0;
-    let smallestDifference = Infinity;
-
-
-    for (
-        let i = 0;
-        i < POINTS;
-        i++
-    ) {
-
-        const itemAngle =
-            -Math.PI / 2 +
-            i * step;
+                let nearestIndex = 0;
+                let smallestDifference = Infinity;
 
 
-        // Rotation needed to put this option
-        // at the right-middle position.
+                for (
+                    let i = 0;
+                    i < POINTS;
+                    i++
+                ) {
 
-        const requiredRotation =
-            -itemAngle;
-
-
-        const difference =
-            Math.abs(
-                normalizeAngle(
-                    requiredRotation -
-                    rotation
-                )
-            );
+                    const itemAngle =
+                        -Math.PI / 2 +
+                        i * step;
 
 
-        if (
-            difference <
-            smallestDifference
-        ) {
+                    // Rotation needed to put this option
+                    // at the right-middle position.
 
-            smallestDifference =
-                difference;
-
-            nearestIndex =
-                i;
-
-        }
-
-    }
+                    const requiredRotation =
+                        -itemAngle;
 
 
-    const nearestItemAngle =
-        -Math.PI / 2 +
-        nearestIndex * step;
+                    const difference =
+                        Math.abs(
+                            normalizeAngle(
+                                requiredRotation -
+                                rotation
+                            )
+                        );
 
 
-    // Lock the nearest option to the
-    // right-middle position.
+                    if (
+                        difference <
+                        smallestDifference
+                    ) {
 
-    snapTarget =
-        -nearestItemAngle;
+                        smallestDifference =
+                            difference;
+
+                        nearestIndex =
+                            i;
+
+                    }
+
+                }
 
 
-    snapping = true;
+                const nearestItemAngle =
+                    -Math.PI / 2 +
+                    nearestIndex * step;
 
-}
+
+                // Lock the nearest option to the
+                // right-middle position.
+
+                snapTarget =
+                    -nearestItemAngle;
+
+
+                snapping = true;
+
+            }
 
         }
 
