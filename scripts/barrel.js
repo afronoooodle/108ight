@@ -2002,12 +2002,21 @@ canvas.addEventListener(
 
 
             // ====================================================
-            // LOGIN
+            // PAGE LINKS
             // ====================================================
 
             if (LABELS[index] === "LOGIN") {
 
                 window.location.href = "login.html";
+
+                return;
+
+            }
+
+
+            if (LABELS[index] === "GALLERY") {
+
+                window.location.href = "gallery.html";
 
                 return;
 
@@ -2070,6 +2079,10 @@ canvas.addEventListener(
 // WHEEL
 // ============================================================
 
+// ============================================================
+// WHEEL
+// ============================================================
+
 canvas.addEventListener(
     "wheel",
     e => {
@@ -2089,7 +2102,7 @@ canvas.addEventListener(
         velocity = 0;
 
 
-        rotation +=
+        rotation -=
             e.deltaY *
             WHEEL_SPEED;
 
@@ -2098,7 +2111,6 @@ canvas.addEventListener(
         passive: false
     }
 );
-
 
 // ============================================================
 // ANIMATION
