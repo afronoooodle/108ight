@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>108ight — Sign Up</title>
+
+    <link
+        rel="stylesheet"
+        href="../styles/auth.css"
+    >
+
+</head>
+
+
+<body data-auth-page="signup">
+
+
+    <main class="auth-page">
+
+        <section class="auth-box">
+
+            <h1 class="auth-title">
+                Create Account
+            </h1>
+
+
+            <form
+                id="signup-form"
+                class="auth-form"
+            >
+
+                <label for="username">
+                    Username
+                </label>
+
+                <input
+                    id="username"
+                    type="text"
+                    autocomplete="username"
+                    required
+                >
+
+
+                <label for="email">
+                    Email
+                </label>
+
+                <input
+                    id="email"
+                    type="email"
+                    autocomplete="email"
+                    required
+                >
+
+
+                <label for="password">
+                    Password
+                </label>
+
+                <input
+                    id="password"
+                    type="password"
+                    autocomplete="new-password"
+                    required
+                >
+
+
+                <label for="password-confirm">
+                    Confirm Password
+                </label>
+
+                <input
+                    id="password-confirm"
+                    type="password"
+                    autocomplete="new-password"
+                    required
+                >
+
+
+                <button
+                    class="auth-button"
+                    type="submit"
+                >
+                    Create Account
+                </button>
+
+            </form>
+
+
+            <div
+                id="auth-message"
+                class="auth-message"
+            ></div>
+
+
+            <div class="auth-links">
+
+                <a href="login.html">
+                    Already have an account?
+                </a>
+
+                <a href="index.html">
+                    Back to 108ight
+                </a>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- Supabase library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Our authentication code -->
+    <script src="scripts/auth.js"></script>
+
+
+</body>
+
+</html>

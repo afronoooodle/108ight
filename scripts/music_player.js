@@ -1,45 +1,21 @@
+
 // ============================================================
 // 108IGHT MUSIC PLAYER
 // ============================================================
-
 
 // ============================================================
 // SETTINGS
 // ============================================================
 
-// --------------------
-// Music
-// --------------------
-
 const MUSIC_FILE = "music/ANTBOOGER - DELIVERY GUY (PROD.glinkli).mp3";
 const MUSIC_NAME = "ANTBOOGER - DELIVERY GUY (PROD.glinkli).mp3";
 
-
-// --------------------
-// Font
-// --------------------
-
-const PLAYER_FONT = "Mozilla Headline"; // Archivo Black
-
-
-// --------------------
-// Player size
-// --------------------
+const PLAYER_FONT = "Mozilla Headline";
 
 const PLAYER_WIDTH = 500;
 const PLAYER_HEIGHT = 40;
 
-
-// --------------------
-// Player position
-// --------------------
-
 const PLAYER_BOTTOM = "0%";
-
-
-// --------------------
-// Player appearance
-// --------------------
 
 const PLAYER_BACKGROUND = "0, 0, 0";
 const PLAYER_BACKGROUND_OPACITY = 0.5;
@@ -49,89 +25,34 @@ const PLAYER_TEXT_COLOR = "white";
 const PLAYER_BORDER_SIZE = 1;
 const PLAYER_BORDER_COLOR = "white";
 
-
-// --------------------
-// Progress rectangle
-// --------------------
-
-// Opacity of the lighter progress area.
 const PLAYER_PROGRESS_OPACITY = 0.15;
-
-// Colour of the progress area.
 const PLAYER_PROGRESS_COLOR = "255, 255, 255";
-
-
-// --------------------
-// Main text
-// --------------------
 
 const PLAYER_TEXT_SIZE = 13;
 const PLAYER_TEXT_WEIGHT = 200;
 
-
-// --------------------
-// Time text
-// --------------------
-
 const PLAYER_TIME_SIZE = 13;
 const PLAYER_TIME_WEIGHT = 200;
 
-
-// --------------------
-// Music note
-// --------------------
-
 const PLAYER_NOTE_SIZE = 21;
 
-
-// --------------------
-// Play button
-// --------------------
-
 const PLAY_BUTTON_HOVER_OPACITY = 0.08;
-
-
-// --------------------
-// Play icon
-// --------------------
 
 const PLAY_ICON_WIDTH = 12;
 const PLAY_ICON_HEIGHT = 8;
 const PLAY_ICON_COLOR = "white";
 
-
-// --------------------
-// Pause icon
-// --------------------
-
 const PAUSE_BAR_WIDTH = 3;
 const PAUSE_BAR_HEIGHT = 16;
 const PAUSE_ICON_WIDTH = 11;
 
-
-// --------------------
-// Text spacing
-// --------------------
-
 const TEXT_LEFT_PADDING = 8;
 const TEXT_RIGHT_PADDING = 8;
-
-
-// --------------------
-// Time area
-// --------------------
 
 const TIME_MIN_WIDTH = 55;
 const TIME_RIGHT_PADDING = 10;
 
-
-// --------------------
-// Seeking
-// --------------------
-
-// Mouse cursor while hovering over the player.
 const SEEK_CURSOR = "ew-resize";
-
 
 // ============================================================
 // AUDIO
@@ -139,7 +60,6 @@ const SEEK_CURSOR = "ew-resize";
 
 const audio = new Audio(MUSIC_FILE);
 audio.preload = "metadata";
-
 
 // ============================================================
 // CREATE PLAYER
@@ -164,7 +84,6 @@ player.innerHTML = `
 
 document.body.appendChild(player);
 
-
 // ============================================================
 // STYLE
 // ============================================================
@@ -181,7 +100,8 @@ style.textContent = `
     bottom: ${PLAYER_BOTTOM};
     transform: translateX(-50%);
 
-    width: ${PLAYER_WIDTH}px;
+    width: min(${PLAYER_WIDTH}px, calc(100vw - 24px));
+    max-width: calc(100vw - 24px);
     height: ${PLAYER_HEIGHT}px;
 
     display: flex;
@@ -201,11 +121,13 @@ style.textContent = `
 
     overflow: hidden;
     user-select: none;
+    -webkit-user-select: none;
+
     z-index: 9999;
-
     cursor: ${SEEK_CURSOR};
-}
 
+    touch-action: none;
+}
 
 /* -------------------- Progress -------------------- */
 
@@ -228,7 +150,6 @@ style.textContent = `
     z-index: 0;
 }
 
-
 /* -------------------- Play button -------------------- */
 
 #music-play {
@@ -250,7 +171,6 @@ style.textContent = `
 
     box-sizing: border-box;
     cursor: pointer;
-
 }
 
 #music-play:hover {
@@ -261,7 +181,6 @@ style.textContent = `
         ${PLAY_BUTTON_HOVER_OPACITY}
     );
 }
-
 
 /* -------------------- Play triangle -------------------- */
 
@@ -280,7 +199,6 @@ style.textContent = `
 
     margin-left: 3px;
 }
-
 
 /* -------------------- Pause icon -------------------- */
 
@@ -314,7 +232,6 @@ style.textContent = `
     right: 0;
 }
 
-
 /* -------------------- Main content -------------------- */
 
 #music-content {
@@ -327,7 +244,6 @@ style.textContent = `
 
     display: flex;
     align-items: center;
-
     justify-content: flex-start;
 
     padding-left: ${TEXT_LEFT_PADDING}px;
@@ -337,18 +253,16 @@ style.textContent = `
     overflow: hidden;
 }
 
-
 /* -------------------- Main text -------------------- */
 
 #music-text {
-    font-size: ${PLAYER_TEXT_SIZE}px;
+    font-size: clamp(10px, 2.8vw, ${PLAYER_TEXT_SIZE}px);
     font-weight: ${PLAYER_TEXT_WEIGHT};
 
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
-
 
 /* -------------------- Right side -------------------- */
 
@@ -367,31 +281,29 @@ style.textContent = `
 
     box-sizing: border-box;
     pointer-events: none;
+    flex-shrink: 0;
 }
-
 
 /* -------------------- Music note -------------------- */
 
 #music-time {
-    font-size: ${PLAYER_NOTE_SIZE}px;
+    font-size: clamp(17px, 4.5vw, ${PLAYER_NOTE_SIZE}px);
     font-weight: ${PLAYER_TEXT_WEIGHT};
 
     line-height: 1;
     white-space: nowrap;
 }
 
-
 /* -------------------- Remaining time -------------------- */
 
 #music-time.remaining {
-    font-size: ${PLAYER_TIME_SIZE}px;
+    font-size: clamp(10px, 2.8vw, ${PLAYER_TIME_SIZE}px);
     font-weight: ${PLAYER_TIME_WEIGHT};
 }
 
 `;
 
 document.head.appendChild(style);
-
 
 // ============================================================
 // ELEMENTS
@@ -403,7 +315,6 @@ const musicText = document.getElementById("music-text");
 const musicTime = document.getElementById("music-time");
 
 let seeking = false;
-
 
 // ============================================================
 // FORMAT TIME
@@ -422,16 +333,19 @@ function formatTime(seconds) {
 
 }
 
-
 // ============================================================
 // PLAY / PAUSE
 // ============================================================
 
 function toggleMusic() {
 
-    audio.paused
-        ? audio.play()
-        : audio.pause();
+    if (audio.paused) {
+        audio.play().catch(error => {
+            console.error("Could not play audio:", error);
+        });
+    } else {
+        audio.pause();
+    }
 
 }
 
@@ -441,7 +355,6 @@ playButton.addEventListener("click", e => {
     toggleMusic();
 
 });
-
 
 // ============================================================
 // PLAY / PAUSE ICON
@@ -455,7 +368,6 @@ audio.addEventListener("pause", () => {
     playIcon.classList.remove("pause");
 });
 
-
 // ============================================================
 // UPDATE PLAYER
 // ============================================================
@@ -467,35 +379,24 @@ audio.addEventListener("timeupdate", () => {
 
     if (!Number.isFinite(duration) || duration <= 0) return;
 
-
-    // Progress rectangle width.
     const progressAreaWidth =
         player.clientWidth - PLAYER_HEIGHT;
 
     const progressWidth =
-        progressAreaWidth *
-        (current / duration);
+        progressAreaWidth * (current / duration);
 
     player.style.setProperty(
         "--progress-width",
         `${progressWidth}px`
     );
 
-
-    // Elapsed time.
     if (!audio.paused) {
 
-        musicText.textContent =
-            formatTime(current);
+        musicText.textContent = formatTime(current);
 
-
-        // Remaining time.
         musicTime.textContent =
             "-" + formatTime(
-                Math.max(
-                    0,
-                    duration - current
-                )
+                Math.max(0, duration - current)
             );
 
         musicTime.classList.add("remaining");
@@ -503,7 +404,6 @@ audio.addEventListener("timeupdate", () => {
     }
 
 });
-
 
 // ============================================================
 // LOAD
@@ -515,7 +415,6 @@ audio.addEventListener("loadedmetadata", () => {
     musicTime.classList.remove("remaining");
 
 });
-
 
 // ============================================================
 // SONG ENDED
@@ -539,12 +438,11 @@ audio.addEventListener("ended", () => {
 
 });
 
-
 // ============================================================
 // SEEK
 // ============================================================
 
-function seekFromMouse(e) {
+function seekFromPointer(e) {
 
     if (!Number.isFinite(audio.duration)) return;
 
@@ -559,21 +457,17 @@ function seekFromMouse(e) {
         rect.width -
         PLAYER_HEIGHT;
 
-    const percentage =
-        Math.max(
-            0,
-            Math.min(
-                1,
-                x / progressWidth
-            )
-        );
+    if (progressWidth <= 0) return;
+
+    const percentage = Math.max(
+        0,
+        Math.min(1, x / progressWidth)
+    );
 
     audio.currentTime =
-        percentage *
-        audio.duration;
+        percentage * audio.duration;
 
 }
-
 
 // ============================================================
 // CLICK TO SEEK
@@ -583,31 +477,41 @@ player.addEventListener("click", e => {
 
     if (e.target.closest("#music-play")) return;
 
-    seekFromMouse(e);
+    seekFromPointer(e);
 
 });
 
-
 // ============================================================
-// DRAG TO SEEK
+// POINTER SEEKING — MOUSE + TOUCH
 // ============================================================
 
-player.addEventListener("mousedown", e => {
+player.addEventListener("pointerdown", e => {
 
     if (e.target.closest("#music-play")) return;
 
     seeking = true;
-    seekFromMouse(e);
+
+    player.setPointerCapture(e.pointerId);
+
+    seekFromPointer(e);
 
 });
 
-window.addEventListener("mousemove", e => {
+player.addEventListener("pointermove", e => {
 
-    if (seeking) seekFromMouse(e);
+    if (!seeking) return;
+
+    seekFromPointer(e);
 
 });
 
-window.addEventListener("mouseup", () => {
+player.addEventListener("pointerup", () => {
+
+    seeking = false;
+
+});
+
+player.addEventListener("pointercancel", () => {
 
     seeking = false;
 

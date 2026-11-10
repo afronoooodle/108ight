@@ -1,0 +1,417 @@
+
+/* ============================================================
+   108IGHT — GALLERY
+============================================================ */
+
+* {
+    box-sizing: border-box;
+}
+
+/* ============================================================
+   BASE
+============================================================ */
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100%;
+    background: #000;
+    color: #fff;
+}
+
+/* ============================================================
+   BLACK BANNER — FIXED AT TOP
+============================================================ */
+
+#music-feature-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 30px;
+    padding: 5px 16px;
+
+    background: #000;
+    color: #fff;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+
+    font-family: "Mozilla Headline", sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+
+    z-index: 10000;
+}
+
+#music-feature-banner a {
+    color: #fff;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    white-space: nowrap;
+}
+
+#music-feature-banner a:hover {
+    opacity: 0.6;
+}
+
+/* ============================================================
+   MUSIC PLAYER
+============================================================ */
+
+#music-player {
+    z-index: 9999;
+}
+
+/* ============================================================
+   GALLERY GRID
+============================================================ */
+
+#gallery {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 1px;
+    overflow: hidden;
+    margin-top: 30px;
+    min-height: calc(100vh - 30px);
+    align-content: start;
+    grid-auto-rows: auto;
+}
+
+/* ============================================================
+   HOMEPAGE GALLERY — TRANSITION
+============================================================ */
+
+body[data-page="home"] #gallery {
+    position: fixed;
+    top: 30px;
+    left: 0;
+    right: 0;
+    bottom: auto;
+    width: 100%;
+    z-index: 2;
+    display: none;
+    margin-top: 0;
+}
+
+body[data-page="home"].gallery-opening #gallery {
+    display: grid;
+}
+
+/* ============================================================
+   HOMEPAGE GALLERY — AFTER TRANSITION
+============================================================ */
+
+body[data-page="home"].gallery-active {
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+body[data-page="home"].gallery-active #gallery {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    display: grid;
+    margin-top: 30px;
+}
+
+/* ============================================================
+   DIRECT GALLERY URL
+============================================================ */
+
+body[data-page="gallery"] {
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+body[data-page="gallery"] #gallery {
+    position: relative;
+    display: grid;
+    margin-top: 30px;
+}
+
+body[data-page="gallery"] #background-video,
+body[data-page="gallery"] canvas {
+    display: none;
+}
+
+/* ============================================================
+   RESPONSIVE GRID
+============================================================ */
+
+@media (max-width: 1200px) {
+    #gallery {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 1000px) {
+    #gallery {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 700px) {
+    #gallery {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 450px) {
+    #gallery {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* ============================================================
+   GALLERY ITEMS
+============================================================ */
+
+.gallery-item {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 9 / 16;
+    overflow: hidden;
+    cursor: pointer;
+    background: #000;
+    will-change: transform, opacity;
+}
+
+.gallery-item img,
+.gallery-item video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ============================================================
+   STAGGERED ENTRANCE
+============================================================ */
+
+body.gallery-preparing .gallery-item {
+    transform: translateY(110vh);
+    opacity: 0;
+}
+
+body.gallery-enter-animation .gallery-item {
+    transform: translateY(0);
+    opacity: 1;
+    transition:
+        transform 850ms cubic-bezier(.22, 1, .36, 1),
+        opacity 500ms ease;
+}
+
+/* ============================================================
+   EXIT ANIMATION
+============================================================ */
+
+body.gallery-leaving {
+    overflow: hidden !important;
+}
+
+body.gallery-leaving .gallery-item {
+    transform: translateY(110vh);
+    opacity: 0;
+    transition:
+        transform 750ms cubic-bezier(.65, 0, .35, 1),
+        opacity 450ms ease;
+}
+
+/* ============================================================
+   LIGHTBOX
+============================================================ */
+
+#lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 9998;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.01);
+    opacity: 0;
+    transition: opacity 450ms ease;
+}
+
+#lightbox.active {
+    display: flex;
+    opacity: 1;
+}
+
+#lightbox.closing {
+    opacity: 0;
+}
+
+/* ============================================================
+   IMAGE LIGHTBOX
+============================================================ */
+
+.lightbox-content {
+    position: fixed;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    transform: translateZ(0);
+}
+
+.lightbox-content img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* ============================================================
+   VIDEO LIGHTBOX
+============================================================ */
+
+.video-content {
+    position: fixed;
+    overflow: hidden;
+    background: #000;
+    transform: translateZ(0);
+}
+
+.video-content video {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* ============================================================
+   VIDEO CONTROLS
+============================================================ */
+
+.video-controls {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 5;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 24px 14px 12px;
+
+    background: linear-gradient(
+        transparent,
+        rgba(0, 0, 0, 0.75)
+    );
+
+    font-family: Arial, sans-serif;
+    color: #fff;
+
+    opacity: 0;
+    transition: opacity 200ms ease;
+}
+
+.video-content.controls-visible .video-controls {
+    opacity: 1;
+}
+
+.video-controls button {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+
+    border: 0;
+    padding: 0;
+
+    background: transparent;
+    color: #fff;
+
+    cursor: pointer;
+    font-size: 19px;
+}
+
+.video-controls input[type="range"] {
+    flex: 1;
+    min-width: 0;
+    height: 4px;
+    cursor: pointer;
+    accent-color: #fff;
+}
+
+.video-time {
+    min-width: 65px;
+    white-space: nowrap;
+    text-align: right;
+    font-size: 11px;
+}
+
+/* ============================================================
+   TABLET AND MOBILE BANNER
+============================================================ */
+
+@media (max-width: 650px) {
+
+    #music-feature-banner {
+        min-height: 42px;
+        gap: 5px 14px;
+        flex-wrap: wrap;
+        align-content: center;
+        padding: 5px 10px;
+        font-size: 11px;
+        text-align: center;
+    }
+
+    #gallery {
+        margin-top: 42px;
+        min-height: calc(100vh - 42px);
+    }
+
+    body[data-page="home"] #gallery {
+        top: 42px;
+    }
+
+    body[data-page="home"].gallery-active #gallery,
+    body[data-page="gallery"] #gallery {
+        margin-top: 42px;
+    }
+
+    body[data-page="home"].gallery-active #gallery {
+        margin-top: 42px;
+    }
+
+}
+
+@media (max-width: 380px) {
+
+    #music-feature-banner {
+        font-size: 10px;
+        gap: 4px 10px;
+    }
+
+}
+
+/* ============================================================
+   REDUCED MOTION
+============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+    body.gallery-enter-animation .gallery-item,
+    body.gallery-leaving .gallery-item {
+        transition-duration: 1ms;
+    }
+
+    #lightbox {
+        transition-duration: 1ms;
+    }
+
+}

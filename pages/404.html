@@ -1,0 +1,48 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>108IGHT</title>
+
+    <script>
+        // =====================================================
+        // GITHUB PAGES ROUTING FALLBACK
+        // =====================================================
+
+        const BASE_PATH = "/108ight";
+
+        let requestedPath = window.location.pathname;
+
+        if (requestedPath.startsWith(BASE_PATH)) {
+            requestedPath =
+                requestedPath.substring(BASE_PATH.length) || "/";
+        }
+
+        if (!requestedPath.startsWith("/")) {
+            requestedPath = "/" + requestedPath;
+        }
+
+        const params = new URLSearchParams(
+            window.location.search
+        );
+
+        params.set("p", requestedPath);
+
+        const destination =
+            BASE_PATH +
+            "/?" +
+            params.toString() +
+            window.location.hash;
+
+        window.location.replace(destination);
+    </script>
+</head>
+
+<body>
+    <p>Returning to 108IGHT...</p>
+</body>
+
+</html>

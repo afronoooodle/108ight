@@ -1,157 +1,109 @@
-/* #website-title {
 
-    font-weight: 900px;
-    font-size: 100px;
-    color: red;
-    position: fixed;
-    top: -50px;
-    right: 20px;
-    z-index: 1000;
-} */
-/* @font-face {
-    font-family: "MyFont";
-    src: url("fonts/AmericanCaptain-MdEY.otf") format("opentype");
-} */
-/* .web-title{
-    font-family: "MyFont", Helvetica, sans-serif;
-    font-size: 64px;
-} */
-/* .comic-cover-box {
-    position: fixed;
-    top: 20px;
-    left: 20px;
+/* ============================================================
+   108IGHT — HOMEPAGE
+============================================================ */
 
-    width: 180px;
-
-    border: 2px solid black;
-
-    background: white;
-
-    color: black;
-
-    font-family: "Archivo Black", sans-serif;
-
-    z-index: 1000;
+* {
+    box-sizing: border-box;
 }
 
-
-.comic-logo {
+html,
+body {
+    margin: 0;
+    padding: 0;
     width: 100%;
-    height: 300px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
+    min-height: 100%;
+    background-color: #000;
+    font-family: "Archivo Black", Arial, sans-serif;
+    color: white;
     overflow: hidden;
 }
 
-.comic-logo img {
-    width: 85%;
-    height: 85%;
+/* ============================================================
+   CANVAS
+============================================================ */
 
-    object-fit: contain;
-
-    display: block;
-}
-
-.comic-info {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-
-    border-top: 2px solid black;
-}
-
-.comic-info-cell {
-    min-height: 45px;
-
-    display: flex;
-    flex-direction: column;
-
-    align-items: center;
-    justify-content: center;
-
-    text-align: center;
-}
-
-.comic-info-cell + .comic-info-cell {
-    border-left: 2px solid black;
-}
-
-.comic-info-label {
-    font-size: 8px;
-    line-height: 1;
-    margin-bottom: 5px;
-}
-
-.comic-info-value {
-    font-size: 13px;
-    line-height: 1;
-}
-*/
-
-canvas{
+canvas {
     position: absolute;
     top: 0;
     left: 0;
+    width: 100%;
+    height: 100%;
+    transform: translateY(0);
+    will-change: transform;
+    z-index: 5;
+    touch-action: pan-y;
 }
 
-body{
-    background-color: rgb(0, 0, 0);
-    font-family: "Archivo Black", Arial, sans-serif;
-    color: white;
-}
+/* ============================================================
+   BACKGROUND VIDEO
+============================================================ */
 
 #background-video {
     position: fixed;
-    top: 0;
-    left: 0;
-
-    width: 100vw;
-    height: 100vh;
-
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
     object-fit: cover;
-
+    object-position: center;
     z-index: -1;
-
     pointer-events: none;
+    transition: opacity 1300ms ease;
 }
 
-#music-feature-banner {
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-
-    width: 100vw !important;
-    height: 30px !important;
-
-    background: #000 !important;
-    color: #fff !important;
-
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-
-    gap: 30px;
-
-    box-sizing: border-box;
-
-    font-family: "Mozilla Headline", sans-serif;
-    font-size: 13px;
-    font-weight: 400;
-
-    z-index: 2147483647 !important;
-
-    opacity: 1 !important;
-    visibility: visible !important;
+body.gallery-opening #background-video {
+    opacity: 0;
 }
 
-#music-feature-banner a {
-    color: #fff !important;
-    text-decoration: underline;
-    text-underline-offset: 3px;
+/* ============================================================
+   GALLERY TRANSITIONS
+============================================================ */
+
+body.gallery-opening canvas {
+    animation: barrel-roll-out 1300ms cubic-bezier(0.55, 0, 0.45, 1) forwards;
 }
 
-#music-feature-banner a:hover {
-    opacity: 0.6;
+@keyframes barrel-roll-out {
+    from {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateY(-120vh);
+        opacity: 0;
+    }
+}
+
+body.gallery-returning canvas {
+    animation: barrel-roll-in 900ms cubic-bezier(.22, 1, .36, 1) both;
+}
+
+@keyframes barrel-roll-in {
+    from {
+        transform: translateY(-120vh);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* ============================================================
+   MOBILE
+============================================================ */
+
+@media (max-width: 600px) {
+
+    #background-video {
+        min-height: 100dvh;
+    }
+
+    canvas {
+        touch-action: none;
+    }
+
 }

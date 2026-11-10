@@ -1,42 +1,126 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+   <base href="/">
+
     <title>108IGHT</title>
-    <!-- <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Mozilla+Headline:wght@200..700&display=swap" rel="stylesheet"> -->
+
+    <link rel="icon" type="image/png" href="/assets/images/108logo.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
     <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Mozilla+Headline:wght@200..700&display=swap" rel="stylesheet">
 
-    
-
     <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="styles/gallery.css">
+    <link rel="stylesheet" href="styles/auth.css">
+
+    
+<script>
+    // =====================================================
+    // 108IGHT ROUTING
+    // =====================================================
+
+    const APP_BASE_PATH = "/108ight";
+
+    window.__108IGHT_BASE_PATH = APP_BASE_PATH;
+
+    const validRoutes = [
+        "/",
+        "/gallery",
+        "/login",
+        "/signup",
+        "/forgot-password",
+        "/reset-password",
+        "/account"
+    ];
+
+    function normalise108ightRoute(path) {
+
+        if (path.startsWith(APP_BASE_PATH)) {
+            path = path.substring(APP_BASE_PATH.length) || "/";
+        }
+
+        path = path.replace(/\/+$/, "") || "/";
+
+        return validRoutes.includes(path) ? path : "/";
+    }
+
+    const params = new URLSearchParams(
+        window.location.search
+    );
+
+    const requestedPath = params.get("p");
+
+    let initialRoute;
+
+    if (requestedPath) {
+
+        initialRoute = normalise108ightRoute(requestedPath);
+
+        history.replaceState(
+            {},
+            "",
+            APP_BASE_PATH +
+            (initialRoute === "/" ? "/" : initialRoute) +
+            window.location.hash
+        );
+
+    } else {
+
+        initialRoute = normalise108ightRoute(
+            window.location.pathname
+        );
+
+    }
+
+    window.__108IGHT_INITIAL_ROUTE = initialRoute;
+
+    window.__108IGHT_INITIAL_PAGE =
+        initialRoute === "/gallery"
+            ? "gallery"
+            : "home";
+</script>
+
+
 </head>
 
-<body>
-    <!-- <h1 id="website-title">ANTBOOGER</h1> -->
-    <!-- <div class="comic-cover-box">
 
-    <div class="comic-logo">
-        <img src="images/point_back.png" alt="108ight">
-    </div>
+<body data-page="home">
 
-    <div class="comic-info">
+    <script>
+    document.body.dataset.page =
+        window.__108IGHT_INITIAL_PAGE;
 
-        <div class="comic-info-cell">
-            <span class="comic-info-label">DATE</span>
-            <span class="comic-info-value">26/09/26</span>
-        </div>
+    const returningFromGallery =
+        new URLSearchParams(window.location.search)
+            .get("returning") === "gallery";
 
-        <div class="comic-info-cell">
-            <span class="comic-info-label">PAGES</span>
-            <span class="comic-info-value">42</span>
-        </div>
+    if (returningFromGallery) {
 
-    </div> -->
-    
+        document.body.classList.add("gallery-returning");
+
+        window.history.replaceState(
+            {},
+            "",
+            window.location.pathname + window.location.hash
+        );
+
+        setTimeout(() => {
+            document.body.classList.remove("gallery-returning");
+        }, 950);
+
+    }
+</script>
+
+
     <video
         id="background-video"
         autoplay
@@ -44,23 +128,70 @@
         loop
         playsinline
     >
-        <source src="videos/video_background_1.mp4" type="video/mp4">
+
+        <source
+            src="/assets/videos/video_background_1.mp4"
+            type="video/mp4"
+        >
+
     </video>
-    
-    
+
 
     <canvas id="canvas1"></canvas>
-    <script src="scripts/barrel.js"> </script>
-    <script src="scripts/music_player.js"></script>
+
 
     <div id="music-feature-banner">
-    <span>WANT YOUR MUSIC FEATURED IN THE NEXT MAGAZINE?</span>
 
-    <a href="mailto:example@email.com">
-        EMAIL: example@email.com
-    </a>
-</div>
-</div>
-   
+        <span>
+            WANT YOUR MUSIC FEATURED IN THE NEXT MAGAZINE?
+        </span>
+
+        <a href="mailto:example@email.com">
+            EMAIL: example@email.com
+        </a>
+
+    </div>
+
+
+    <div id="gallery"></div>
+    <div id="lightbox"></div>
+
+
+    <!-- =====================================================
+         AUTHENTICATION OVERLAY
+    ====================================================== -->
+
+    <div
+        id="auth-overlay"
+        class="auth-overlay"
+        aria-hidden="true"
+    >
+
+        <section class="auth-container">
+
+            <div id="auth-content"></div>
+
+        </section>
+
+    </div>
+
+
+    <!-- =====================================================
+         SCRIPTS
+    ====================================================== -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="scripts/barrel.js"></script>
+
+    <script src="scripts/auth-barrel.js"></script>
+
+    <script src="scripts/auth.js"></script>
+
+    <script src="scripts/music_player.js"></script>
+
+    <script src="scripts/gallery.js"></script>
+
+
 </body>
 </html>
